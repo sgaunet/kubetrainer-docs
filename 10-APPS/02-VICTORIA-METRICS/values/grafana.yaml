@@ -1,0 +1,64 @@
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: victoriametrics
+          type: prometheus
+          orgId: 1
+          url: http://victoria-metrics-victoria-metrics-single-server.victoria-metrics.svc.cluster.local:8428
+          access: proxy
+          isDefault: true
+          updateIntervalSeconds: 10
+          editable: true
+
+  dashboardProviders:
+   dashboardproviders.yaml:
+     apiVersion: 1
+     providers:
+     - name: 'default'
+       orgId: 1
+       folder: ''
+       type: file
+       disableDeletion: true
+       editable: true
+       options:
+         path: /var/lib/grafana/dashboards/default
+     - name: 'grafana-dashboards-kubernetes'
+       orgId: 1
+       folder: 'Kubernetes'
+       type: file
+       disableDeletion: true
+       editable: true
+       options:
+         path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
+
+  dashboards:
+    default:
+      victoriametrics:
+        gnetId: 10229
+        revision: 22
+        datasource: victoriametrics
+      kubernetes:
+        gnetId: 14205
+        revision: 1
+        datasource: victoriametrics
+
+    grafana-dashboards-kubernetes:
+      k8s-system-api-server:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
+        token: ''
+      k8s-system-coredns:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json
+        token: ''
+      k8s-views-global:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
+        token: ''
+      k8s-views-namespaces:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
+        token: ''
+      k8s-views-nodes:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
+        token: ''
+      k8s-views-pods:
+        url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
+        token: ''
