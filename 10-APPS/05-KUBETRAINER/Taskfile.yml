@@ -1,0 +1,18 @@
+# https://taskfile.dev
+version: '3'
+tasks:
+  default:
+    desc: "list all tasks"
+    cmds:
+      - task -a
+
+  install:
+    desc: "install kubetrainer"
+    cmds:
+      - helmfile apply
+
+  port-forward-ihm:
+    desc: "port forward kubetrainer"
+    cmds:
+      - echo "kubetrainer is available at http://localhost:3001"
+      - kubectl port-forward --namespace default service/kubetrainer 3001:3000

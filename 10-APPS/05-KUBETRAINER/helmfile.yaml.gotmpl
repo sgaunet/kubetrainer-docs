@@ -1,0 +1,58 @@
+helmDefaults:
+  # cleanupOnFail: false               #dedicated default key for helm flag --cleanup-on-fail
+  # additional and global args passed to helm (default "")
+  # wait for k8s resources via --wait. (default false)
+  wait: true
+  # if set and --wait enabled, will wait until all Jobs have been completed before marking the release as successful. It will wait for as long as --timeout (default false, Implemented in Helm3.5)
+  waitForJobs: true
+  # time in seconds to wait for any individual Kubernetes operation (like Jobs for hooks, and waits on pod/pvc/svc/deployment readiness) (default 300)
+  timeout: 600
+  createNamespace: false
+
+repositories:
+- name: kubetrainer-repo
+  url: https://sgaunet.github.io/helm-kubetrainer/
+- name: bitnami
+  url: https://charts.bitnami.com/bitnami
+
+releases:
+# Redis
+- name: redis
+  namespace: default
+  chart: bitnami/redis
+  version: 18.0.0
+  values:
+    - auth:
+        enabled: false
+    - architecture: standalone
+    - master:
+        persistence:
+          enabled: false
+
+# PostgreSQL
+- name: postgresql
+  namespace: default
+  chart: bitnami/postgresql
+  #version: 12.12.0
+  values:
+    - auth:
+        postgresPassword: ""
+        username: kubetrainer
+        password: kubetrainer
+        database: kubetrainer
+    - primary:
+        persistence:
+          enabled: false
+
+# Kubetrainer applications
+- name: kubetrainer
+  namespace: default
+  chart: kubetrainer-repo/kubetrainer
+  values:
+    - ./values/ihm-values.vault.yaml
+
+- name: kubetrainer-consumer
+  namespace: default
+  chart: kubetrainer-repo/kubetrainer
+  values:
+    - ./values/consumer-values.vault.yaml
