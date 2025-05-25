@@ -1,0 +1,25 @@
+# https://taskfile.dev
+version: '3'
+tasks:
+  default:
+    desc: "list all tasks"
+    cmds:
+      - task -a
+
+  install:
+    desc: "install victoria-metrics and grafana"
+    cmds:
+      - helmfile apply
+
+  get-grafana-admin-password-preprod:
+    desc: "get grafana admin password"
+    cmds:
+      - kubectl get secret --namespace victoria-metrics grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+  port-forward-grafana:
+    desc: "port forward grafana"
+    cmds:
+      - echo "Grafana is available at http://localhost:3000"
+      - echo "Grafana admin password is $(kubectl get secret --namespace victoria-metrics grafana -o jsonpath="{.data.admin-password}" | base64 --decode)"
+      - echo "Grafana admin user is admin"
+      - kubectl port-forward --namespace victoria-metrics service/grafana 3000:80

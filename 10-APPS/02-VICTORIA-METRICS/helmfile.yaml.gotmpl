@@ -1,0 +1,29 @@
+helmDefaults:
+  # cleanupOnFail: false               #dedicated default key for helm flag --cleanup-on-fail
+  # additional and global args passed to helm (default "")
+  # wait for k8s resources via --wait. (default false)
+  wait: true
+  # if set and --wait enabled, will wait until all Jobs have been completed before marking the release as successful. It will wait for as long as --timeout (default false, Implemented in Helm3.5)
+  waitForJobs: true
+  # time in seconds to wait for any individual Kubernetes operation (like Jobs for hooks, and waits on pod/pvc/svc/deployment readiness) (default 300)
+  timeout: 600
+  createNamespace: true
+
+repositories:
+- name: victoria-metrics
+  url: https://victoriametrics.github.io/helm-charts/
+- name: grafana
+  url: https://grafana.github.io/helm-charts
+
+releases:
+- name: victoria-metrics
+  namespace: victoria-metrics
+  chart: victoria-metrics/victoria-metrics-single
+  values:
+    - ./values/vm-values.yaml
+
+- name: grafana
+  namespace: victoria-metrics
+  chart: grafana/grafana
+  values:
+    - ./values/grafana.yaml
