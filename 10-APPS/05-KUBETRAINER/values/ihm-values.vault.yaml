@@ -1,0 +1,11 @@
+# image:
+#   pullPolicy: "Always"
+#   tag: "latest"
+
+configuration:
+  DB_DSN: "postgres://kubetrainer:kubetrainer@postgresql:5432/kubetrainer?sslmode=disable"
+  REDIS_DSN: "redis://redis-master:6379"
+  REDIS_MAXSTREAMLENGTH: 1000
+  REDIS_STREAMGROUP: "kubetrainer"
+  REDIS_STREAMNAME: "kubetrainer"
+  CONSUMER_MODE: false
