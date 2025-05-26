@@ -1,0 +1,36 @@
+# https://keda.sh/docs/2.16/scalers/redis-streams/
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: kubetrainer-consumer
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: kubetrainer-consumer
+  pollingInterval: 10   # Optional. Default: 30 seconds
+  cooldownPeriod: 30    # Optional. Default: 300 seconds
+  maxReplicaCount: 10   # Optional. Default: 100
+  minReplicaCount: 0    # Optional. Default: 0
+
+  triggers:
+  - type: redis-streams
+    metadata:
+      address: redis-master.default.svc.cluster.local:6379 # Required if host and port are not provided. Format - host:port
+      # host: localhost # Required if address is not provided
+      # port: "6379" # Required if address is not provided and host has been provided.
+      # usernameFromEnv: REDIS_USERNAME # optional (can also use authenticationRef)
+      # passwordFromEnv: REDIS_PASSWORD # optional (can also use authenticationRef)
+      stream: kubetrainer # Required - name of the Redis Stream
+      consumerGroup: kubetrainer # optional - name of consumer group associated with Redis Stream
+      # pendingEntriesCount: "1" # optional - number of entries in the Pending Entries List for the specified consumer group in the Redis Stream
+      # streamLength: "50" # optional - Redis stream length, alternative to pendingEntriesCount scaler trigger
+      lagCount: "5" # optional - number of lagging entries in the consumer group, alternative to pendingEntriesCount scaler trigger
+      activationLagCount: "1" # required if lagCount is provided - lag count at which scaler triggers
+      enableTLS: "false" # optional
+      unsafeSsl: "false" # optional
+      databaseIndex: "0" # optional
+      # Alternatively, you can use existing environment variables to read configuration from:
+      # See details in "Parameter list" section
+      # addressFromEnv:  # Optional. You can use this instead of `address` parameter
+      # hostFromEnv:     # Optional. You can use this instead of `host` parameter
+      # portFromEnv: "6379" # Optional. You can use this instead of `port` parameter
