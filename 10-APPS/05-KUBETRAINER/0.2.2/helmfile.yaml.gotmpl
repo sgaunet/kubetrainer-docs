@@ -16,18 +16,7 @@ repositories:
   url: https://charts.bitnami.com/bitnami
 
 releases:
-# Redis
-- name: redis
-  namespace: default
-  chart: bitnami/redis
-  version: 18.0.0
-  values:
-    - auth:
-        enabled: false
-    - architecture: standalone
-    - master:
-        persistence:
-          enabled: false
+# Note: Redis is deployed via raw manifest (redis.yaml) to avoid Bitnami subscription issues
 
 # PostgreSQL
 - name: postgresql
@@ -48,6 +37,7 @@ releases:
 - name: kubetrainer
   namespace: default
   chart: kubetrainer-repo/kubetrainer
+  version: 0.2.2
   values:
     - ./values/ihm-values.vault.yaml
 
