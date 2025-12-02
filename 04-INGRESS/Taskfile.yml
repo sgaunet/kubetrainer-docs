@@ -1,0 +1,56 @@
+# https://taskfile.dev
+version: '3'
+tasks:
+
+  default:
+    desc: "List all tasks"
+    cmds:
+      - task -a
+
+  apply:
+    desc: "Apply the ingress resource"
+    cmds:
+      - kubectl apply -f ingress.yaml
+
+  delete:
+    desc: "Delete the ingress resource"
+    cmds:
+      - kubectl delete -f ingress.yaml
+
+  port-forward:
+    desc: "Forward ingress controller to localhost (Mac/Docker Desktop)"
+    cmds:
+      - echo "Forwarding ingress-nginx-controller to http://localhost:8080"
+      - echo "Access your application at http://localhost:8080"
+      - echo "Press Ctrl+C to stop port forwarding"
+      - kubectl port-forward --namespace ingress-nginx service/ingress-nginx-controller 8080:80
+
+  test-linux:
+    desc: "Test ingress access (Linux - direct)"
+    cmds:
+      - curl -v http://localhost:80
+
+  test-mac:
+    desc: "Test ingress access (Mac - requires port-forward running)"
+    cmds:
+      - curl -v http://localhost:8080
+
+  status:
+    desc: "Show ingress and controller status"
+    cmds:
+      - echo "=== Ingress Resources ==="
+      - kubectl get ingress
+      - echo ""
+      - echo "=== Ingress Details ==="
+      - kubectl describe ingress http-echo
+      - echo ""
+      - echo "=== Ingress Controller Pods ==="
+      - kubectl get pods -n ingress-nginx -l app.kubernetes.io/component=controller
+      - echo ""
+      - echo "=== Ingress Controller Service ==="
+      - kubectl get svc -n ingress-nginx ingress-nginx-controller
+
+  logs:
+    desc: "Show ingress controller logs"
+    cmds:
+      - kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller --tail=50

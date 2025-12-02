@@ -8,11 +8,16 @@ This project will try to guide you to get a local kubernetes environment in orde
 * ...
 
 
-This project is tested under Linux for the moment.
+This project is tested under Linux and macOS (Docker Desktop).
 
 * You have to install docker
 * and [kind](https://kind.sigs.k8s.io/)
 * and [task](https://taskfile.dev/)
+
+## Platform Notes
+
+- **Linux:** All tutorials work with direct localhost access
+- **Mac/Windows (Docker Desktop):** Tutorials work as documented. The Ingress tutorial (04-INGRESS) requires `kubectl port-forward` for access due to Docker Desktop's VM networking
 
 Done ?
 
